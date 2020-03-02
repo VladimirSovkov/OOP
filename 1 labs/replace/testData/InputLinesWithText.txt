@@ -1,0 +1,3 @@
+The most common text to test the program.
+
+Second line with text.
