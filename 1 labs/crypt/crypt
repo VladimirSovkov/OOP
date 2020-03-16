@@ -1,0 +1,4 @@
+not enough arguments
+crypt.exe crypt <input file> <output file> <key>
+OR
+crypt.exe decrypt <input file> <output file> <key> 

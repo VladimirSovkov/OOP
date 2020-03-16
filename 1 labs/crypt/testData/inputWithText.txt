@@ -1,0 +1,10 @@
+The tanks are divided into two groups: main and special. The main tanks are designed to 
+solve the main combat tasks. They combine high mobility, security and firepower. Special 
+tanks are tanks designed for special combat missions (for example, light floating).
+
+Tankman is a military profession. Tanks were invented not very long ago. They are less than 
+a hundred years. But now it is one of the main military vehicles. Strong armor protects the 
+tank from enemy projectiles. Each tank has a gun. Work at the tank very difficult. In the 
+tank there is cramped, stuffy and very shaky. The engine keeps crashing. The tank is a 
+complex machine. The whole crew works in the tank: the commander, the mechanic, the shooter 
+and the radio operator.
