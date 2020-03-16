@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <fstream>
 #include <string>
+//0.8
 
 using namespace std;
 
@@ -50,18 +51,13 @@ double FindingDeterminant(double** matrix, const int SIZE_MATRIX)
 	return summ;
 }
 
-double GetDeterminantMinorMatrix(double** matrix, const int SIZE_MATRIX, int column, int row)
+double GetDeterminantMinorMatrix(double** matrix, 
+	const int SIZE_MATRIX, 
+	int column, 
+	int row)
 {
 	const int SYZE_MINOR_MATRIX = SIZE_MATRIX - 1;
-	
-	//double** minorMatrix = new double* [SYZE_MINOR_MATRIX] {};
-	//for (int i = 0; i < SYZE_MINOR_MATRIX; i++)//создание двумерного динамического массива 
-	//{
-	//	minorMatrix[i] = new double[SYZE_MINOR_MATRIX] {};
-	//}
-
 	double minorMatrix[2][2]{};
-
 	int columnMatrix = 0;
 	int rowMatrix = 0;
 
@@ -124,7 +120,9 @@ void GetMatrixOfAlgebraicComplements(double** matrix)
 	matrix[2][1] *= -1;
 }
 
-void MatrixMultiplicationByNumber(double** matrix, const int SIZE_MATRIX, const int number)
+void MatrixMultiplicationByNumber(double** matrix, 
+	const int SIZE_MATRIX, 
+	const int number)
 {
 	for (int i = 0; i < SIZE_MATRIX; i++)
 	{
@@ -141,7 +139,7 @@ void ConclusionMatrix(double** matrix, const int SIZE)
 	{
 		for (int j = 0; j < SIZE; j++)
 		{
-			cout << round(matrix[i][j] * 1000) / 1000 << "\t";
+			cout << round(matrix[i][j] * 1000) / 1000 << "\t";//setprecision
 		}
 		cout << "\n";
 	}
@@ -153,6 +151,7 @@ int main(int argc, char* argv[])
 	if (argc < 2)
 	{
 		cout << "missing arguments" << endl;
+		cout << "invert.exe <matrix file>" << endl;
 		return 1;
 	}
 	else
@@ -193,15 +192,15 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-	double** inverseMatrix = new double* [SIZE_MATRIX] {};
+	double** inverseMatrix = new double* [SIZE_MATRIX] {};//создание двумерного динамического массива 
 	for (int i = 0; i < SIZE_MATRIX; i++)
 	{
 		inverseMatrix[i] = new double[SIZE_MATRIX];
 	}
 
-	for (int i = 0; i < SIZE_MATRIX; i++)//создание двумерного динамического массива 
+	for (int i = 0; i < SIZE_MATRIX; i++)
 	{
-		inverseMatrix[i] = new double[SIZE_MATRIX] {};
+		//inverseMatrix[i] = new double[SIZE_MATRIX] {};
 		for (int i = 0; i < SIZE_MATRIX; i++)
 		{
 			for (int j = 0; j < SIZE_MATRIX; j++)
