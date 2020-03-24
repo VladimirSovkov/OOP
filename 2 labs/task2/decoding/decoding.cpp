@@ -14,6 +14,5 @@ int main()
 		cout << line << endl;
 	}
 	
-	cout << line << endl;
 	return 0;
 }
