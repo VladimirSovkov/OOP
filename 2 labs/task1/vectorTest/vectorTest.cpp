@@ -1,25 +1,30 @@
 ﻿#define CATCH_CONFIG_MAIN
-#include <catch2/catch.hpp>
+#include <../../catch2/catch.hpp>
 #include "vector/ProcessVector.h"
 
-using namespace std;
 
-TEST_CASE("return all vector values multiplied by the minimum number")
+TEST_CASE("check with empty vector")
 {
-	vector<double> arrayNumbers;
-	vector<double> outArrayNumbers;
+	std::vector<double> arrayNumbers;
+	std::vector<double> outArrayNumbers;
 	MultiplicationOfAllElementsByTheMinimum(arrayNumbers);
 
 	CHECK(arrayNumbers == outArrayNumbers);
+}
 
-	arrayNumbers = { 0, 43.6535, 69.3523, 74, 53.9238 };
-	outArrayNumbers = { 0, 0, 0, 0, 0 };
+TEST_CASE("vector minimum number 0")
+{
+	std::vector<double> arrayNumbers = { 0, 43.6535, 69.3523, 74, 53.9238 };
+	std::vector<double> outArrayNumbers = { 0, 0, 0, 0, 0 };
 	MultiplicationOfAllElementsByTheMinimum(arrayNumbers);
-	
+
 	CHECK(arrayNumbers == outArrayNumbers);
- 
-	arrayNumbers = { 2, 5, 6, 45.64 };
-	outArrayNumbers = { 4, 10, 12, 91.28 };
+}
+
+TEST_CASE("integer and fractional numbers are passed to the input")
+{
+	std::vector<double> arrayNumbers = { 2, 5, 6, 45.64 };
+	std::vector<double> outArrayNumbers = { 4, 10, 12, 91.28 };
 	MultiplicationOfAllElementsByTheMinimum(arrayNumbers);
 
 	CHECK(arrayNumbers == outArrayNumbers);
