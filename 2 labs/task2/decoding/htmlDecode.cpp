@@ -27,7 +27,7 @@ std::string HtmlDecode(std::string const& html)
 		{
 			decodingLine.erase(codeIndex, sizeCode);
 			decodingLine.insert(codeIndex, decryptedValue);
-;		}
+		}
 	}
 	return decodingLine;
 }
