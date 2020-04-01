@@ -1,9 +1,9 @@
 #include "htmlDecode.h"
 #include <string>
 #include <iostream>
-#include <map>
+#include <unordered_map>
 
-const std::map <std::string, std::string> codeLibrary = 
+const std::unordered_map <std::string, std::string> codeLibrary =
 { 
 	{"&quot;", "\""},
 	{"&apos;", "\'"},
@@ -21,7 +21,7 @@ std::string HtmlDecode(std::string const& html)
 	{
 		std::string valueCode = it->first;
 		std::string decryptedValue = it->second;
-		int sizeCode = valueCode.length();
+		size_t sizeCode = valueCode.length();
 
 		while ((codeIndex = decodingLine.find(valueCode)) != std::string::npos)
 		{
