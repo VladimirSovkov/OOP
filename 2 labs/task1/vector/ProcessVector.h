@@ -1,4 +1,4 @@
 #pragma once
 #include <vector>
 
-void MultiplicationOfAllElementsByTheMinimum(std::vector<double>& numbers);
+void MultiplyByMinElement(std::vector<double>& numbers);
