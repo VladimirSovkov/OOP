@@ -1,51 +1,32 @@
 #include "MiniDictionary.h"
+#include <algorithm>
 
 using namespace std;
 
 bool IsEng(string line)
 {
-	for (size_t i = 0; i < line.length(); i++)
+	transform(line.begin(), line.end(), line.begin(), tolower);
+	if (any_of(line.begin(), line.end(), 
+		[](char symbol) { return symbol >= 'a' && symbol <= 'z';}))
 	{
-		if ((line[i] >= 'A' && line[i] <= 'Z') ||
-			(line[i] >= 'a' && line[i] <= 'z'))
-		{
-			return true;
-		}
+		return true;
 	}
+
 	return false;
 }
 
 string RemoveLeadingandTrailingSpaces(string line)
 {
-	bool isSpace = true;
-
-	for (size_t i = 0; i < line.length(); )
+	size_t indexOfFirstNonWhitespace = line.find_first_not_of(" \t");
+	if (indexOfFirstNonWhitespace == string::npos)
 	{
-		if (isSpace && line[i] == ' ')
-		{
-			line.erase(i, 1);
-		}
-		else
-		{
-			isSpace = false;
-			if (line[i] == ' ')
-			{
-				isSpace = true;
-			}
-			i++;
-		}
+		return "";
 	}
-
-	size_t indexOfLastCharacter = line.length();
-	indexOfLastCharacter -= 1;
-
-	if (indexOfLastCharacter > 0 && line[indexOfLastCharacter] == ' ')
-	{
-		line.erase(indexOfLastCharacter, 1);
-	}
-
+	size_t indexOfLastNonWhitespace = line.find_last_not_of(" \t");
+	
+	line = line.substr(indexOfFirstNonWhitespace, indexOfLastNonWhitespace - indexOfFirstNonWhitespace + 1);
+	
 	return line;
-
 }
 
 WordList WriteWordsToList(string line)
@@ -96,7 +77,7 @@ string WriteWordsToStringFromList(WordList wordList)
 	return outputString;
 }
 
-bool LoadingWordsInDictionary(std::ifstream & fileDictionary, Vocabulary& vocabulary)
+bool LoadingWordsInDictionary(std::istream& fileDictionary, Vocabulary& vocabulary)
 {
 	std::string line;
 	string wordInEng;
@@ -190,7 +171,14 @@ void AddWordToTheDictionary(std::string wordInEng, std::string stringInRus, Voca
 	wordInEng = RemoveLeadingandTrailingSpaces(wordInEng);
 	WordList wordListInRus = WriteWordsToList(stringInRus);
 
-	vocabulary[wordInEng] = wordListInRus;
+	if (Translate(wordInEng, vocabulary) != "")
+	{
+		vocabulary[wordInEng].insert(vocabulary[wordInEng].end(), wordListInRus.begin(), wordListInRus.end());
+	}
+	else
+	{
+		vocabulary[wordInEng] = wordListInRus;
+	}
 }
 
 bool SavingTheDictionaryToFile(std::string &nameFile, Vocabulary & vocabulary)

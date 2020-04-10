@@ -9,9 +9,11 @@ using namespace std;
 bool ExtractDictionaryFromFile(string nameFileDictionary, Vocabulary &vocabulary)
 {
 	ifstream dictionaryFile(nameFileDictionary);
+
+	istream& a = dictionaryFile;
 	if (dictionaryFile.is_open())
 	{
-		if (!LoadingWordsInDictionary(dictionaryFile, vocabulary))
+		if (!LoadingWordsInDictionary(a, vocabulary))
 		{
 			cout << "некорректно записан файл библиотеки" << endl;
 			cout << "[england] russian" << endl;
