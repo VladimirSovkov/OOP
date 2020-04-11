@@ -6,14 +6,13 @@
 
 using namespace std;
 
-bool ExtractDictionaryFromFile(string nameFileDictionary, Vocabulary &vocabulary)
+bool ExtractDictionaryFromFile(const string dictionaryPath, Vocabulary &vocabulary)
 {
-	ifstream dictionaryFile(nameFileDictionary);
-
-	istream& a = dictionaryFile;
+	ifstream dictionaryFile(dictionaryPath);
 	if (dictionaryFile.is_open())
 	{
-		if (!LoadingWordsInDictionary(a, vocabulary))
+		istream& streamToDictionaryFile = dictionaryFile;
+		if (!DownloadTranslationsFromDictionary(streamToDictionaryFile, vocabulary))
 		{
 			cout << "некорректно записан файл библиотеки" << endl;
 			cout << "[england] russian" << endl;
@@ -21,16 +20,14 @@ bool ExtractDictionaryFromFile(string nameFileDictionary, Vocabulary &vocabulary
 		}
 	}
 
-	dictionaryFile.close();
-
 	return true;
 }
 
-void RunDictionary(Vocabulary &vocabulary, bool &dictionaryChanged)
+bool RunAndChangeDictionary(Vocabulary& vocabulary)
 {
+	bool dictionaryChanged = false;
 	string inputWord;
 	string outputWord;
-
 	do
 	{
 		getline(cin, inputWord);
@@ -43,25 +40,21 @@ void RunDictionary(Vocabulary &vocabulary, bool &dictionaryChanged)
 		if (inputWord != "...")
 		{
 			outputWord = Translate(inputWord, vocabulary);
-
 			if (outputWord == "")
 			{
 				dictionaryChanged = true;
 				cout << "Неизвестное слово \"" << inputWord << "\".";
 				cout << "Введите перевод или пустую строку для отказа." << endl;
 
-
 				getline(cin, outputWord);
-
 				transform(outputWord.begin(), outputWord.end(), outputWord.begin(), tolower);
-
 				if (outputWord.empty())
 				{
 					cout << "Слово \"" << inputWord << "\" проигнорировано." << endl;
 				}
 				else
 				{
-					AddWordToTheDictionary(inputWord, outputWord, vocabulary);
+					AddWordToDictionary(inputWord, outputWord, vocabulary);
 					cout << "Слово \"" << inputWord << "\" сохранено в словаре как \"" << outputWord << "\"" << endl;
 				}
 			}
@@ -70,26 +63,28 @@ void RunDictionary(Vocabulary &vocabulary, bool &dictionaryChanged)
 				cout << outputWord << endl;
 			}
 		}
-
 	} while (inputWord != "...");
-}
-bool ChangeDictionaryContent(Vocabulary &vocabulary, string nameFileDictionary)
-{
-	string inputWord;
 
+	return dictionaryChanged;
+}
+
+bool ChangeDictionaryContent(Vocabulary &vocabulary, string dictionaryPath)
+{
 	cout << "В словарь были внесены изменения.";
 	cout << "Введите Y или y для сохранения перед выходом." << endl;
 
+	string inputWord;
 	getline(cin, inputWord);
-
 	if (inputWord == "Y" || inputWord == "y")
 	{
-
-		if (!SavingTheDictionaryToFile(nameFileDictionary, vocabulary))
+		ofstream outputDictionaryFile(dictionaryPath);
+		if (!outputDictionaryFile.is_open())
 		{
-			cout << "ошибка при записи файла" << endl;
+			cout << "ошибка при открытии файла" << endl;
 			return false;
 		}
+		ostream& streamToOutputDictionaryFile = outputDictionaryFile;
+		SavingDictionaryToFile(streamToOutputDictionaryFile, vocabulary);
 
 		cout << "Изменения сохранены. Досвидания" << endl;
 	}
@@ -114,19 +109,13 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-	string nameFileDictionary = string(argv[1]);
 	Vocabulary vocabulary;
-
 	if (!ExtractDictionaryFromFile(string(argv[1]), vocabulary))
 	{
 		return 1;
 	}
 
-	bool dictionaryChanged = false;
-
-	RunDictionary(vocabulary, dictionaryChanged);
-
-	if (dictionaryChanged)
+	if (RunAndChangeDictionary(vocabulary))
 	{
 		if (!ChangeDictionaryContent(vocabulary, string(argv[1])))
 		{

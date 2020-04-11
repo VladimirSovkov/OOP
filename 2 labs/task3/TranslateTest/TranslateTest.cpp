@@ -4,33 +4,38 @@
 
 TEST_CASE("checking data loading into the dictionary")
 {
-	std::ifstream inputCorrectFile("testData/FileWithTheCorrectForm.txt");
-	Vocabulary inputVocabulary;
-	Vocabulary outputVocabulary = {
-		{"apple", {"яблоко"}},
-		{"cat", {"кот", "кошка"}},
-		{"red", {"красный"}},
-		{"red square", {"красная площадь"}}
-	};
+	WHEN("a stream with the correct dictionary form is input")
+	{
+		std::istringstream input("[apple] яблоко\n[cat] кот, кошка\n [red] красный\n [red square] красная площадь");
+		Vocabulary inputVocabulary;
+		Vocabulary outputVocabulary = {
+			{"apple", {"яблоко"}},
+			{"cat", {"кот", "кошка"}},
+			{"red", {"красный"}},
+			{"red square", {"красная площадь"}}
+		};
 
-	CHECK(LoadingWordsInDictionary(inputCorrectFile, inputVocabulary) == true);
-	CHECK(inputVocabulary == outputVocabulary);
+		CHECK(DownloadTranslationsFromDictionary(input, inputVocabulary) == true);
+		CHECK(inputVocabulary == outputVocabulary);
+	}
 
-	inputCorrectFile.close();
+	WHEN("empty stream is input")
+	{
+		std::istringstream input("");
+		Vocabulary inputVocabulary;
+		Vocabulary outputVocabulary = {};
 
-	std::ifstream inputEmptyFile("testData/EmptyFile.txt");
-	inputVocabulary = {};
-	outputVocabulary = {};
+		CHECK(DownloadTranslationsFromDictionary(input, inputVocabulary) == true);
+		CHECK(inputVocabulary == outputVocabulary);
+	}
 
-	CHECK(LoadingWordsInDictionary(inputEmptyFile, inputVocabulary) == true);
-	CHECK(inputVocabulary == outputVocabulary);
+	WHEN("a stream with an incorrect dictionary form is input")
+	{
+		Vocabulary inputVocabulary;
+		std::istringstream incorrectDictionaryFileStream("[apple яблоко\n[cat],\n[red]\nred square красная площадь");
+		CHECK(DownloadTranslationsFromDictionary(incorrectDictionaryFileStream, inputVocabulary) == false);
+	}
 
-	inputEmptyFile.close();
-
-	std::ifstream inputIncorrectFile("testData/FileWithIncorrectDataRecording.txt");
-	CHECK(LoadingWordsInDictionary(inputIncorrectFile, inputVocabulary) == false);
-
-	inputIncorrectFile.close();
 }
 
 TEST_CASE("check translation search words")
@@ -64,7 +69,7 @@ TEST_CASE("check for adding a word to the dictionary")
 		{"red", {"красный"}}
 	};
 
-	AddWordToTheDictionary(wordInEng, wordInRus, inputVocabulary);
+	AddWordToDictionary(wordInEng, wordInRus, inputVocabulary);
 	CHECK(inputVocabulary == outputVocabulary);
 
 	wordInEng = "apple";
@@ -74,16 +79,30 @@ TEST_CASE("check for adding a word to the dictionary")
 		{"apple", {"яблоко"}}
 	};
 
-	AddWordToTheDictionary(wordInRus, wordInEng, inputVocabulary);
+	AddWordToDictionary(wordInRus, wordInEng, inputVocabulary);
 	CHECK(inputVocabulary == outputVocabulary);
 
 	wordInEng = "cat";
 	wordInRus = "кот, кошка";
-	inputVocabulary = {};
 	outputVocabulary = {
+		{"apple", {"яблоко"}},
 		{"cat", {"кот", "кошка"}}
 	};
 
-	AddWordToTheDictionary(wordInEng, wordInRus, inputVocabulary);
+	AddWordToDictionary(wordInEng, wordInRus, inputVocabulary);
 	CHECK(inputVocabulary == outputVocabulary);
+}
+
+TEST_CASE("")
+{
+	std::ostringstream output("");
+	Vocabulary vocabulary = {
+		{"apple", {"яблоко"}},
+		{"cat", {"кот", "кошка"}},
+		{"red", {"красный"}},
+		{"red square", {"красная площадь"}}
+	};
+
+	SavingDictionaryToFile(output, vocabulary);
+	CHECK(output.str() == "[apple] яблоко\n[cat] кот, кошка\n[red] красный\n[red square] красная площадь\n");
 }

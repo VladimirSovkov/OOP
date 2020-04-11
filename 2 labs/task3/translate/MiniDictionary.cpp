@@ -25,7 +25,6 @@ string RemoveLeadingandTrailingSpaces(string line)
 	size_t indexOfLastNonWhitespace = line.find_last_not_of(" \t");
 	
 	line = line.substr(indexOfFirstNonWhitespace, indexOfLastNonWhitespace - indexOfFirstNonWhitespace + 1);
-	
 	return line;
 }
 
@@ -34,7 +33,6 @@ WordList WriteWordsToList(string line)
 	WordList wordList;
 	string word = "";
 	size_t startWord = 0;
-
 	for (size_t endWord = line.find(','); 
 		endWord != string::npos; 
 		endWord = line.find(',', endWord + 1))
@@ -59,10 +57,9 @@ WordList WriteWordsToList(string line)
 	return wordList;
 }
 
-string WriteWordsToStringFromList(WordList wordList)
+string WriteWordsToStringFromList(const WordList& wordList)
 {
 	string outputString = "";
-
 	for (string word : wordList)
 	{
 		outputString += (word + ", ");
@@ -77,36 +74,34 @@ string WriteWordsToStringFromList(WordList wordList)
 	return outputString;
 }
 
-bool LoadingWordsInDictionary(std::istream& fileDictionary, Vocabulary& vocabulary)
+bool DownloadTranslationsFromDictionary(std::istream& fileDictionary, Vocabulary& vocabulary)
 {
 	std::string line;
-	string wordInEng;
-	string stringInRus;
-	size_t startOfWord, endOfWord;
-	size_t sizeLine = 0;
-
 	while (getline(fileDictionary, line))
 	{
-		sizeLine = line.length();
-		startOfWord = line.find('[');
-		endOfWord = line.find(']');
+		size_t sizeLine = line.length();
+		size_t startOfWord = line.find('[');
+		size_t endOfWord = line.find(']');
 
 		if ((startOfWord == string::npos) || (endOfWord == string::npos))
 		{
 			return false;
 		}
+
+		if (startOfWord > endOfWord)
+		{
+			return false;
+		}
 		
-		wordInEng = line.substr(startOfWord + 1, endOfWord - startOfWord - 1);
+		string wordInEng = line.substr(startOfWord + 1, endOfWord - startOfWord - 1);
 		if (endOfWord + 2 > sizeLine)
 		{
 			return false;
 		}
 
-		stringInRus = line.substr(endOfWord + 1);
-
+		string stringInRus = line.substr(endOfWord + 1);
 		wordInEng = RemoveLeadingandTrailingSpaces(wordInEng);
 		WordList wordListInRus = WriteWordsToList(stringInRus);
-
 		if (wordListInRus.size() == 0)
 		{
 			return false;
@@ -120,10 +115,9 @@ bool LoadingWordsInDictionary(std::istream& fileDictionary, Vocabulary& vocabula
 
 
 
-string TranslationFromEngToRus(std::string const& wordEng, Vocabulary& vocabulary)
+string TranslationFromEngToRus(string wordEng, const Vocabulary& vocabulary)
 {
-	map <string, WordList>::iterator iteratorVocabulary;
-	iteratorVocabulary = vocabulary.find(wordEng);
+	auto iteratorVocabulary = vocabulary.find(wordEng);
 	if (iteratorVocabulary == vocabulary.end())
 	{
 		return {};
@@ -132,7 +126,7 @@ string TranslationFromEngToRus(std::string const& wordEng, Vocabulary& vocabular
 	return WriteWordsToStringFromList(iteratorVocabulary->second);
 }
 
-string TranslationFromRusToEng(string const &wordRus, Vocabulary& vocabulary)
+string TranslationFromRusToEng(string wordRus, const Vocabulary& vocabulary)
 {
 	WordList wordList;
 	for ( auto it = vocabulary.begin(); it != vocabulary.end(); it++)
@@ -147,7 +141,7 @@ string TranslationFromRusToEng(string const &wordRus, Vocabulary& vocabulary)
 	return "";
 }
 
-string Translate(string &line, Vocabulary& vocabulary)
+string Translate(string line, const Vocabulary& vocabulary)
 {
 	line = RemoveLeadingandTrailingSpaces(line);
 	if (IsEng(line))
@@ -158,10 +152,9 @@ string Translate(string &line, Vocabulary& vocabulary)
 	{
 		return TranslationFromRusToEng(line, vocabulary);
 	}
-
 }
 
-void AddWordToTheDictionary(std::string wordInEng, std::string stringInRus, Vocabulary& vocabulary)
+void AddWordToDictionary(std::string wordInEng, std::string stringInRus, Vocabulary& vocabulary)
 {
 	if (!IsEng(wordInEng))
 	{
@@ -181,21 +174,13 @@ void AddWordToTheDictionary(std::string wordInEng, std::string stringInRus, Voca
 	}
 }
 
-bool SavingTheDictionaryToFile(std::string &nameFile, Vocabulary & vocabulary)
+void SavingDictionaryToFile(std::ostream& streamToOutputDictionaryFile, const Vocabulary& vocabulary)
 {
-	ofstream outputDictionaryFile(nameFile);
-	if (!outputDictionaryFile.is_open())
-	{
-		return false;
-	}
 	for (auto it = vocabulary.begin(); it != vocabulary.end(); ++it)
 	{
-		outputDictionaryFile << '[' << it->first << ']';
-		outputDictionaryFile << ' ' << WriteWordsToStringFromList(it->second) << '\n';
+		streamToOutputDictionaryFile << '[' << it->first << ']';
+		streamToOutputDictionaryFile << ' ' << WriteWordsToStringFromList(it->second) << '\n';
 	}
-	
-	outputDictionaryFile.close();
-	return true;
 }
 
 
