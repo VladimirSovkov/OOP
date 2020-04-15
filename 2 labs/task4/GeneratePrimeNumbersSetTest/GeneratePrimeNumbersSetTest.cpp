@@ -39,3 +39,22 @@ TEST_CASE("check on a large range the number of numbers")
 }
 
 #endif
+
+TEST_CASE("check for the creation of a vector point to prime numbers in the form of an index")
+{
+	std::vector<bool> outputSet = CreateVectorPointToPrimeNumber(1);
+	std::vector<bool> sample{ false, false };
+	CHECK(sample == outputSet);
+
+	outputSet = CreateVectorPointToPrimeNumber(0);
+	sample = { false };
+	CHECK(sample == outputSet);
+
+	outputSet = CreateVectorPointToPrimeNumber(-1);
+	sample = {};
+	CHECK(sample == outputSet);
+
+	outputSet = CreateVectorPointToPrimeNumber(2);
+	sample = {false, false, true};
+	CHECK(sample == outputSet);
+}

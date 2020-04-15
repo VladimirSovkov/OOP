@@ -1,5 +1,6 @@
 ﻿#include <iostream>
 #include "GeneratePrimeNumbersSet.h"
+#include <vector>
 
 using namespace std;
 

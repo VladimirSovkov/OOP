@@ -3,10 +3,21 @@
 
 using namespace std;
 
-vector<bool> IsThisPrimeNumber(const int upperBound)
+vector<bool> CreateVectorPointToPrimeNumber(const int upperBound)
 {
+	if (upperBound < 0)
+	{
+		return {};
+	}
+
 	int lengthVector = upperBound + 1;
 	vector<bool>isPrime(lengthVector, true);
+	size_t sizeVector = isPrime.size();
+	for (int i = 0; (i < sizeVector) && (i < 2); i++)
+	{
+		isPrime[i] = false;
+	}
+	
 	for (int i = 2; i*i < lengthVector; i++)
 	{
 		if (isPrime[i])
@@ -21,23 +32,22 @@ vector<bool> IsThisPrimeNumber(const int upperBound)
 	return isPrime;
 }
 
-set<int> GetPrimeNumbers(const vector<bool> isPrime)
+set<int> GetPrimeNumbers(const vector<bool>& isPrime)
 {
-	set<int> manyPrimeNumbers;
+	set<int> primeNumbersSet;
 	for (unsigned int i = 2; i < isPrime.size(); i++)
 	{
 		if (isPrime[i])
 		{
-			manyPrimeNumbers.insert(i);
+			primeNumbersSet.insert(primeNumbersSet.end(), i);
 		}
 	}
-
-	return manyPrimeNumbers;
+	return primeNumbersSet;
 }
 
 std::set<int> GeneratePrimeNumbersSet(int upperBound)
 {
-	vector<bool> isPrime = IsThisPrimeNumber(upperBound);
+	vector<bool> isPrime = CreateVectorPointToPrimeNumber(upperBound);
 	set<int> manyPrimeNumbers = GetPrimeNumbers(isPrime);
 	return manyPrimeNumbers;
 }
