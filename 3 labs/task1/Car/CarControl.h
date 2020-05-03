@@ -12,7 +12,7 @@ public:
 	bool AnswerCommand();
 
 private:
-	void GetInfoCar();
+	void GetInfoCar() const;
 	bool SetEngineOn();
 	bool SetEnjineOff();
 	bool SetSpeed(int speed);

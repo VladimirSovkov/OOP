@@ -6,8 +6,8 @@ using namespace std;
 
 int main()
 {
-	CCar car;
-	CCarControl carControl(cin, cout, car);
+	CCar superCarKalina;
+	CCarControl carControl(cin, cout, superCarKalina);
 	while (!cin.eof())
 	{
 		carControl.AnswerCommand();

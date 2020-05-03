@@ -4,7 +4,6 @@
 TEST_CASE("validation of the creation of default values")
 {
 	CCar car;
-	CHECK(car.GetDrivingDirectionCar() == DrivingDirection::StandStill);
 	CHECK(car.GetGear() == 0);
 	CHECK(!car.GetIsEngineOn());
 	CHECK(car.GetSpeed() == 0);
@@ -140,7 +139,6 @@ TEST_CASE("incorrect gear shifting at speed")
 	CHECK(!car.SetGear(6));
 	CHECK(!car.SetGear(-2));
 	CHECK(car.GetGear() == 0);
-	
 }
 
 TEST_CASE("set speed in various gears")
@@ -150,21 +148,17 @@ TEST_CASE("set speed in various gears")
 	car.SetGear(1);
 	CHECK(car.SetSpeed(20));
 	CHECK(car.GetSpeed() == 20);
-	CHECK(car.GetDrivingDirectionCar() == DrivingDirection::Forward);
 	
 	car.SetGear(0);
 	CHECK(car.SetSpeed(0));
 	CHECK(car.GetSpeed() == 0);
-	CHECK(car.GetDrivingDirectionCar() == DrivingDirection::StandStill);
 
 	car.SetGear(-1);
 	CHECK(car.SetSpeed(20));
 	CHECK(car.GetSpeed() == 20);
-	CHECK(car.GetDrivingDirectionCar() == DrivingDirection::Back);
 
 	CHECK(car.SetSpeed(5));
 	CHECK(car.GetSpeed() == 5);
-	CHECK(car.GetDrivingDirectionCar() == DrivingDirection::Back);
 
 	CHECK(car.SetSpeed(5));
 
@@ -201,4 +195,38 @@ TEST_CASE("change of speed to an incorrect value for a given gear")
 	car.SetGear(5);
 	CHECK(!car.SetSpeed(151));
 	CHECK(!car.SetSpeed(200));
+}
+
+TEST_CASE("Check on a get driving directions")
+{
+	CCar car;
+	car.TurnOnEngine();
+	car.SetGear(1);
+	CHECK(car.GetDrivingDirectionCar() == CCar::DrivingDirection::StandStill);
+	
+	car.SetSpeed(10);
+	CHECK(car.GetDrivingDirectionCar() == CCar::DrivingDirection::Forward);
+
+	car.SetSpeed(0);
+	car.SetGear(-1);
+	car.SetSpeed(10);
+	CHECK(car.GetDrivingDirectionCar() == CCar::DrivingDirection::Back);
+}
+
+TEST_CASE("switching to various pedagogues when reversing")
+{
+	CCar car;
+	car.TurnOnEngine();
+	car.SetGear(-1);
+	car.SetSpeed(20);
+	CHECK(car.GetDrivingDirectionCar() == CCar::DrivingDirection::Back);
+
+	CHECK(!car.SetGear(1));
+	CHECK(!car.SetGear(2));
+	CHECK(!car.SetGear(3));
+	CHECK(!car.SetGear(4));
+	CHECK(!car.SetGear(5));
+
+	CHECK(car.GetDrivingDirectionCar() == CCar::DrivingDirection::Back);
+	CHECK(car.GetGear() == -1);
 }

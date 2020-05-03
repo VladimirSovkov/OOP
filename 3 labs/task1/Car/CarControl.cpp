@@ -11,17 +11,17 @@ CCarControl::CCarControl(std::istream& command, std::ostream& answer, CCar& car)
 {
 }
 
-string GetDrivingDirection(const DrivingDirection& Direction)
+string GetDrivingDirection(const CCar::DrivingDirection& Direction)
 {
-	if (Direction == DrivingDirection::Back)
+	if (Direction == CCar::DrivingDirection::Back)
 	{
 		return "Back";
 	}
-	else if	(Direction == DrivingDirection::Forward)
+	else if	(Direction == CCar::DrivingDirection::Forward)
 	{
 		return "Forward";
 	}
-	else if (Direction == DrivingDirection::StandStill)
+	else if (Direction == CCar::DrivingDirection::StandStill)
 	{
 		return "Stand Still";
 	}
@@ -57,35 +57,35 @@ bool CCarControl::AnswerCommand()
 	string commandLine;
 	getline(m_command, commandLine);
 	smatch result;
-	regex regularExpression("^(\\s*)(\\w+)(\\s*)(<\\s*(-*\\d+)\\s*>)?(\\s*)$");
+	regex regularExpression("^(?:\\s*)(\\w+)(?:\\s*)(?:\\s*)(-*\\d+)?(?:\\s*)(?:\\s*)$");
 	if (!regex_search(commandLine, result, regularExpression))
 	{
 		m_answer << "Incorrect command" << endl;
 		return false;
 	}
 	
-	optional<int> valueCommand = GetValueCommand(result[5]);
-	commandLine = result[2];
-	if (commandLine == "Info" && !valueCommand)
+	optional<int> argumentCommand = GetValueCommand(result[2]);
+	commandLine = result[1];
+	if (commandLine == "Info" && !argumentCommand)
 	{
 		GetInfoCar();
 		return true;
 	}
-	else if (commandLine == "EngineOn" && !valueCommand)
+	else if (commandLine == "EngineOn" && !argumentCommand)
 	{
 		return SetEngineOn();
 	}
-	else if(commandLine == "EngineOff" && !valueCommand)
+	else if(commandLine == "EngineOff" && !argumentCommand)
 	{
 		return SetEnjineOff();
 	}
-	else if (commandLine == "SetGear" && valueCommand)
+	else if (commandLine == "SetGear" && argumentCommand)
 	{
-		return SetGear(valueCommand.value());
+		return SetGear(argumentCommand.value());
 	}
-	else if (commandLine == "SetSpeed" && valueCommand)
+	else if (commandLine == "SetSpeed" && argumentCommand)
 	{
-		return SetSpeed(valueCommand.value());
+		return SetSpeed(argumentCommand.value());
 	}
 	else
 	{
@@ -94,7 +94,7 @@ bool CCarControl::AnswerCommand()
 	}
 }
 
-void CCarControl::GetInfoCar()
+void CCarControl::GetInfoCar() const
 {
 	m_answer << "Engine:\t" << GetEngineStates(m_car) << endl;
 	m_answer << "Direction:\t" << GetDrivingDirection(m_car.GetDrivingDirectionCar()) << endl;
@@ -144,13 +144,13 @@ bool CCarControl::SetGear(int gear)
 		{
 			m_answer << "reverse gear not possible at speed" << endl;
 		}
-		else if (gear > 0 && m_car.GetDrivingDirectionCar() == DrivingDirection::Back)
+		else if (gear > 0 && m_car.GetDrivingDirectionCar() == CCar::DrivingDirection::Back)
 		{
 			m_answer << "cannot switch to forward gear, when the car moves back" << endl;
 		}
 		else if (!m_car.GetIsEngineOn() && gear != 0)
 		{
-			m_answer << "switching off the engine is prohibited, except switching to neutral gear" << endl;
+			m_answer << "The engine is off. Switching impossible" << endl;
 		}
 		else
 		{
