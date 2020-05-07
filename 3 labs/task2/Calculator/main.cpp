@@ -12,6 +12,6 @@ int main()
 	{
 		calculatorControl.AnswerCommand();
 	}
-	
+	 
 	return 0;
 }

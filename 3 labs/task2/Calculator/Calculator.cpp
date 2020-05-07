@@ -62,7 +62,9 @@ bool CCalculator::SetFunction(const std::string& nameFunction,
 	function.nameFirstVariable = nameFirstIdentifier;
 	function.nameSecondVariable = nameSecondIdentifier;
 	function.typeOfOperation = operation;
+	function.value = CalculateFunction(nameFirstIdentifier, nameSecondIdentifier, operation);
 	m_containerOfFunction.emplace(nameFunction, function);
+	m_orderOfDeclaredFunctions.emplace_back(nameFunction);
 	
 	return true;
 }
@@ -78,8 +80,9 @@ bool CCalculator::SetFunction(const string& nameFunction, const string& nameIden
 	function.nameFirstVariable = nameIdentifier;
 	function.nameSecondVariable = "";
 	function.typeOfOperation = {};
+	function.value = GetValue(nameIdentifier);
 	m_containerOfFunction.emplace(nameFunction, function);
-
+	m_orderOfDeclaredFunctions.push_back(nameFunction);
 	return true;
 }
 
@@ -89,6 +92,7 @@ bool CCalculator::SetVariableValue(const string& name, double value)
 	{
 		SetVariables(name);
 		m_containerOfVariables[name] = value;
+		UpdateFunctionValues();
 		return true;
 	}
 
@@ -127,6 +131,23 @@ std::optional<double>CCalculator::CalculateFunction(const std::string& firstIden
 	}
 }
 
+void CCalculator::UpdateFunctionValues()
+{
+	for (std::string nameFunction : m_orderOfDeclaredFunctions)
+	{
+		Function& function = m_containerOfFunction.at(nameFunction);
+		if (function.typeOfOperation == std::nullopt)
+		{
+			function.value = GetValue(function.nameFirstVariable);
+		}
+		else
+		{
+			function.value = CalculateFunction(function.nameFirstVariable, 
+				function.nameSecondVariable, function.typeOfOperation.value());
+		}
+	}
+}
+
 std::optional<double> CCalculator::GetValue(const std::string& name) const
 {
 	if (IsVariableDeclared(name))
@@ -136,16 +157,7 @@ std::optional<double> CCalculator::GetValue(const std::string& name) const
 
 	if (IsFunctionDeclared(name))
 	{
-		Function function = m_containerOfFunction.at(name);
-		if (function.nameSecondVariable.empty())
-		{
-			return GetValue(function.nameFirstVariable);
-		}
-		else
-		{
-			return CalculateFunction(function.nameFirstVariable,
-				function.nameSecondVariable, function.typeOfOperation.value());
-		}
+		return m_containerOfFunction.at(name).value;
 	}
 	return {};
 }
@@ -177,6 +189,7 @@ bool CCalculator::SetVariableValue(const std::string& importValueKey, const std:
 	}
 	
 	m_containerOfVariables[importValueKey] = valueKey;
+	UpdateFunctionValues();
 	return true;
 }
 

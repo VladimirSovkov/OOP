@@ -2,6 +2,7 @@
 #include <map>
 #include <string>
 #include <optional>
+#include <vector>
 
 class CCalculator
 {
@@ -19,10 +20,12 @@ public:
 		std::string nameFirstVariable;
 		std::string nameSecondVariable;
 		std::optional<Operation> typeOfOperation;
+		std::optional<double> value;
 	};
 
 	typedef std::map<std::string, std::optional<double>> VariablesContainer;
 	typedef std::map<std::string, Function> FunctionContainer;
+	typedef std::vector<std::string> DeclaredFunctionContainer;
 
 	bool SetVariables(const std::string& name);
 	bool SetVariableValue(const std::string& name, double value);
@@ -52,7 +55,10 @@ private:
 	std::optional<double> CalculateFunction(const std::string& fisrtIdentifier,
 		const std::string& secondIdentifier, CCalculator::Operation operation) const;
 
+	void UpdateFunctionValues();
+
 	VariablesContainer m_containerOfVariables;
 	FunctionContainer m_containerOfFunction;
+	DeclaredFunctionContainer m_orderOfDeclaredFunctions;
 };
 

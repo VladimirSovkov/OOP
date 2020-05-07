@@ -13,7 +13,7 @@ CCalculatorControl::CCalculatorControl(std::istream& command, std::ostream& answ
 {
 }
 
-CCalculator::Operation GetOperation(const string& operation)
+optional<CCalculator::Operation> GetOperation(const string& operation)
 {
 	if (operation == "+")
 	{
@@ -30,6 +30,10 @@ CCalculator::Operation GetOperation(const string& operation)
 	else if (operation == "/")
 	{
 		return CCalculator::Operation::Division;
+	}
+	else
+	{
+		return {};
 	}
 }
 
@@ -175,8 +179,12 @@ bool CCalculatorControl::AddNewFunction(const std::string& expression)
 	}
 	else
 	{
-		CCalculator::Operation operation = GetOperation(result[4]);
-		if (m_calculator.SetFunction(nameFunction, nameFirstIdentifier, nameSecondIdentifier, operation))
+		optional<CCalculator::Operation> operation = GetOperation(result[4]);
+		if (!operation)
+		{
+			return false;
+		}
+		if (m_calculator.SetFunction(nameFunction, nameFirstIdentifier, nameSecondIdentifier, operation.value()))
 		{
 			return true;
 		}
