@@ -1,0 +1,16 @@
+rectangle -0.5 0.2 1 0.4 ffb300 ffb300
+triangle -0.5 -0.2 -0.5 0.2 -0.9 0.2 ffb300 ffb300
+triangle 0.5 -0.2 0.5 0.2 0.9 0.2 ffb300 ffb300
+triangle 0.4 0.2 0.6 0.4 0.4 0.7 000000 bdf400
+triangle -0.1 0.2 -0.1 0.9 0.2 0.5 000000 bdf400
+rectangle -0.4 0.5 0.1 0.3 000000 000000
+line -0.4 0.4 -0.5 0.4 000000
+line -0.5 0.3 -0.5 0.5 000000
+circle -0.8 -0.2 0.2 0000ff 0000ff
+circle -0.5 -0.2 0.2 0000ff 0000ff
+circle -0.2 -0.2 0.2 0000ff 0000ff
+circle 0.1 -0.2 0.2 0000ff 0000ff
+circle 0.4 -0.2 0.2 0000ff 0000ff
+circle 0.7 -0.2 0.2 0000ff 0000ff
+rectangle -1 -0.1 1 0.3 0000ff 0000ff
+rectangle 0 -0.1 1 0.3 0000ff 0000ff
