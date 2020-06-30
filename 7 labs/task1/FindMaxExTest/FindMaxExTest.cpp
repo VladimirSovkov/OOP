@@ -18,7 +18,7 @@ TEST_CASE("there is one element in the array")
 	CHECK(maxValue == 1);
 }
 
-TEST_CASE("vector with type int") //dodelat
+TEST_CASE("vector with type int") 
 {
 	std::vector<int> arr{ 1, 2, 5, 1, 3 };
 	int maxValue = 0;
@@ -26,7 +26,7 @@ TEST_CASE("vector with type int") //dodelat
 	CHECK(maxValue == 5);
 }
 
-TEST_CASE("vector with type char") //dodelat
+TEST_CASE("vector with type char") 
 {
 	std::vector<char> arr{ 'a', 'b', 'c', 'a' };
 	char maxValue = 0;
@@ -34,7 +34,7 @@ TEST_CASE("vector with type char") //dodelat
 	CHECK(maxValue == 'c');
 }
 
-TEST_CASE("vector with type double") //dodelat
+TEST_CASE("vector with type double") 
 {
 	std::vector<double> arr{ 1.0, 3.5, 4.9, 0.0};
 	double maxValue = 0;
@@ -42,7 +42,7 @@ TEST_CASE("vector with type double") //dodelat
 	CHECK(maxValue == 4.9);
 }
 
-TEST_CASE("vector with type string") //dodelat
+TEST_CASE("vector with type string") 
 {
 	std::vector<std::string> arr{ "a", "ab", "abc", "c"};
 	std::string maxValue = "";
